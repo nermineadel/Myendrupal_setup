@@ -16,7 +16,9 @@
   template: src=drupal.conf dest=/etc/nginx/sites-available/
   
 - name: remove default site
-  command: rm /etc/nginx/sites-enabled/default
+  file:
+   dest: /etc/nginx/sites-enabled/default
+   state: absent
   
 - name: Link avaible sites with our enabled sites
   file: 
