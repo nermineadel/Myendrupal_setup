@@ -1,0 +1,25 @@
+---
+ 
+- name: Create the Drupal database
+  postgresql_db: 
+   name:  "{{ DB_name }}"
+   state: present
+   encoding: 'UTF-8'
+  become_user: postgres
+ 
+
+- name: Create the Drupal user
+  postgresql_user: 
+    db:  "{{ DB_name }}" 
+    name: "{{ DB_user }}" 
+    password:  "{{ user_password }}" 
+    priv: ALL
+  become_user: postgres
+
+- name: Set byteaoutput to escape with another method
+  shell: psql -U postgres -c 'ALTER DATABASE "Drupal" SET bytea_output = 'escape';' 
+   
+  
+
+
+    

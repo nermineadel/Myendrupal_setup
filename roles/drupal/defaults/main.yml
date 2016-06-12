@@ -1,0 +1,4 @@
+---
+drupal_projpath: /var/www/drupal
+proj_owner: www-data
+proj_grp: www-data

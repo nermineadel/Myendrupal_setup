@@ -1,0 +1,23 @@
+---
+
+- name: Install PHP and associated packages
+  apt: name=php5-fpm state=latest
+
+- name: Install PHP GD library
+  apt: name=php5-gd state=latest
+  notify:
+    - Restart Nginx
+
+- name: Change settings in default php.ini file 
+  lineinfile: 
+   dest: /etc/php5/fpm/php.ini
+   regexp: "short_open_tag = Off"
+   line: "short_open_tag = On"
+   backrefs: yes
+
+- name: Change settings in default php.ini file 
+  lineinfile: 
+   dest: /etc/php5/fpm/php.ini
+   regexp: ";cgi.fix_pathinfo=1"
+   line: "cgi.fix_pathinfo=0"
+   backrefs: yes   

@@ -1,0 +1,20 @@
+---
+
+
+
+- hosts: drupal_hosts
+  remote_user: nermine
+  become: yes
+  become_user: root
+
+
+
+  roles:
+    - swap
+    - update
+    - nginx
+    - php
+    - psql
+    - drupal
+
+  

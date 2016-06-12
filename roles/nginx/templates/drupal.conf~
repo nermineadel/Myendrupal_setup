@@ -1,0 +1,30 @@
+server {
+
+        listen   80 default;
+        root {{ drupal_projpath }};
+       index index.php index.html index.htm;
+
+
+
+        location / {
+ try_files $uri $uri/ /index.php?q=$uri&$args;
+
+  }
+
+   location ~ \.php$ {  
+
+    include fastcgi_params;
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+  }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+    expires max;
+    log_not_found off;
+    }
+  }
+
+
+
+

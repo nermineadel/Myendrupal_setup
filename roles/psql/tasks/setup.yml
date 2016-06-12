@@ -1,0 +1,30 @@
+---
+
+- name: Install postgresql-9.3 
+  apt: name=postgresql-9.3 state=installed update-cache=yes 
+
+
+- name: Install PSQL module for PHP 
+  apt: name=php5-pgsql state=latest
+
+- name: Install development header files
+  apt: pkg=libpq-dev state=installed update_cache=yes
+ # when: postgresql.install_development_headers == true
+
+- name: Install Python PSQLdb
+  apt: 
+   name: python-psycopg2
+   state: latest
+
+
+- name: adding this line to authenticate user postgres
+  lineinfile: 
+   dest: /etc/postgresql/9.3/main/pg_hba.conf
+   insertafter: "# Database administrative login by Unix domain socket"
+   line: "local   all             postgres                                trust"
+
+- name: Restart Postgresql service
+  service: 
+   name: postgresql 
+   state: restarted
+

@@ -1,0 +1,35 @@
+---
+
+- name: Install nginx and associated packages
+  apt: name=nginx state=latest
+
+
+- name: Determine user to run nginx server
+  lineinfile:
+   dest: /etc/nginx/nginx.conf
+   regexp: "#user  nobody;"
+   line: "user {{ proj_owner }};"
+   backrefs: yes 
+
+
+- name: Copy nginx configuration for drupal
+  template: src=drupal.conf dest=/etc/nginx/sites-available/
+  
+- name: remove default site
+  command: rm /etc/nginx/sites-enabled/default
+  
+- name: Link avaible sites with our enabled sites
+  file: 
+   src: /etc/nginx/sites-available/drupal.conf 
+   dest: /etc/nginx/sites-enabled/drupal.conf 
+   state: link
+  notify: restart
+
+
+#- name: Include sites-enabled in nginx main config files
+ # lineinfile:
+ #   dest: /etc/nginx/nginx.conf
+ #   insertbefore: "^}"
+ #   line: "include /etc/nginx/sites-enabled/*;"
+ # notify: restart
+

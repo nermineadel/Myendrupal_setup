@@ -1,0 +1,55 @@
+---
+
+- name: Install git
+  apt: 
+   name: git 
+   state: latest
+
+- name: Clone Drupal
+  git: 
+    repo: http://git.drupal.org/project/drupal.git
+    dest: "{{ drupal_projpath }}"
+    update: no
+
+
+- name: Create settings.php
+  command: cp "{{ drupal_projpath }}"/sites/default/default.settings.php "{{ drupal_projpath }}"/sites/default/settings.php
+
+- name: Create services.yml
+  command: cp "{{ drupal_projpath }}"/sites/default/default.services.yml "{{ drupal_projpath }}"/sites/default/services.yml
+
+
+- name: Download composer installer
+  shell: 'curl -sS https://getcomposer.org/installer > /root/composer-installer.php'
+
+- name: Install php5-cli 
+  apt: 
+   name: php5-cli
+   state: latest
+
+
+- name: install composer
+  shell: 'php /root/composer-installer.php  chdir={{ drupal_projpath }}'
+
+- name: make composer global command
+  command: 'ln -s "{{ drupal_projpath }}"/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer'
+
+- name: install drush8
+  command: composer require drush/drush:~8  chdir={{ drupal_projpath }}
+
+- name: make drush global command
+  command: 'ln -s "{{ drupal_projpath }}"/vendor/drush/drush/drush /usr/local/bin/drush creates=/usr/local/bin/drush'   
+
+
+- name: Change owner and group and persmissions of the project root path
+  file: 
+   path: "{{ drupal_projpath }}"
+   mode: 0755
+   state: directory
+   owner: "{{ proj_owner }}"
+   group: "{{ proj_grp }}"
+   recurse: yes
+
+- name: Restarting nginx 
+  service: name=nginx state=restarted enabled=yes
+
