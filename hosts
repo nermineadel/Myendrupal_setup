@@ -1,3 +1,0 @@
-[drupal_hosts]
- host1 ansible_ssh_host=107.170.141.122 ansible_port=2256 ansible_ssh_user=nermine
- 
