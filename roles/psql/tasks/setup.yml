@@ -9,7 +9,7 @@
 
 - name: Install development header files
   apt: pkg=libpq-dev state=installed update_cache=yes
- # when: postgresql.install_development_headers == true
+ 
 
 - name: Install Python PSQLdb
   apt: 
